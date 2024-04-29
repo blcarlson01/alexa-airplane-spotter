@@ -7,7 +7,7 @@ def is_valid_app(event):
     return event['session']['application']['applicationId'] == app_id
 
 def get_output_speech():
-    r = requests.get(speech_endpoint)
+    r = requests.get(speech_endpoint, timeout=60)
     output = json.loads(r.text)['response'].encode('ascii')
     return output
 
