@@ -112,7 +112,7 @@ class RtlScanner(Scanner):
     def __init__(self, assert_conn=True):
         if assert_conn:
             try:
-                data = requests.get(self.ENDPOINT)
+                data = requests.get(self.ENDPOINT, timeout=60)
             except requests.exceptions.ConnectionError:
                 raise RtlScanner.RtlException()
 
@@ -154,7 +154,7 @@ class RtlScanner(Scanner):
 
 
     def nearby(self):
-        res = requests.get(self.ENDPOINT) # localhost:8080/data.json
+        res = requests.get(self.ENDPOINT, timeout=60) # localhost:8080/data.json
         data = json.loads(res.text)
         data = filter(self._valid_data, data)
         return [self._as_state_vector(v) for v in data]
