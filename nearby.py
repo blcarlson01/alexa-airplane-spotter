@@ -5,6 +5,7 @@ import settings
 import requests
 import json
 import gpxpy.geo
+from security import safe_requests
 
 
 TAKE_DUMP = True
@@ -112,7 +113,7 @@ class RtlScanner(Scanner):
     def __init__(self, assert_conn=True):
         if assert_conn:
             try:
-                data = requests.get(self.ENDPOINT, timeout=60)
+                data = safe_requests.get(self.ENDPOINT, timeout=60)
             except requests.exceptions.ConnectionError:
                 raise RtlScanner.RtlException()
 
@@ -154,7 +155,7 @@ class RtlScanner(Scanner):
 
 
     def nearby(self):
-        res = requests.get(self.ENDPOINT, timeout=60) # localhost:8080/data.json
+        res = safe_requests.get(self.ENDPOINT, timeout=60) # localhost:8080/data.json
         data = json.loads(res.text)
         data = filter(self._valid_data, data)
         return [self._as_state_vector(v) for v in data]

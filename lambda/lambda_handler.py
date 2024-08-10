@@ -1,13 +1,13 @@
 from __future__ import print_function
 from lambda_settings import app_id, speech_endpoint
-import requests
 import json
+from security import safe_requests
 
 def is_valid_app(event):
     return event['session']['application']['applicationId'] == app_id
 
 def get_output_speech():
-    r = requests.get(speech_endpoint, timeout=60)
+    r = safe_requests.get(speech_endpoint, timeout=60)
     output = json.loads(r.text)['response'].encode('ascii')
     return output
 
