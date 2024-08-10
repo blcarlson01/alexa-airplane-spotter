@@ -1,12 +1,12 @@
 from bs4 import BeautifulSoup
 from pymongo import MongoClient
 import json
-import requests
 import re
 import csv
 import datetime
 from logger import logger
 import settings
+from security import safe_requests
 
 route_data_endpoint = 'https://www.flightradar24.com/data/aircraft/{}'
 
@@ -51,7 +51,7 @@ def scrape_route_data(reg_no):
     url = route_data_endpoint.format(reg_no) #flightradar24.com/data/aircraft/{}
     logger.info("url={}".format(url))
     headers = {'user-agent': 'curl/7.38.0'} # cloudfare 418 workaround
-    res = requests.get(url, headers=headers, timeout=60)
+    res = safe_requests.get(url, headers=headers, timeout=60)
     route_row = most_recent_departure(BeautifulSoup(res.text, "lxml"))
 
     depart = route_row.findAll('td')[2].find('span').text
